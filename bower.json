@@ -1,0 +1,22 @@
+{
+  "name": "asyncNavigator",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Alberto Urbano <hunterxyz@gmail.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "history.js": "~1.8.0"
+  }
+}
