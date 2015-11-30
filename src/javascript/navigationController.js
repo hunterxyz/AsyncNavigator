@@ -122,8 +122,8 @@ function countProperties(obj) {
             });
 
             return {
-                error:  actionsError,
-                child:  child,
+                error: actionsError,
+                child: child,
                 parent: parent
             };
 
@@ -153,7 +153,7 @@ function countProperties(obj) {
             transitionHandler += '.AsyncNavigator';
 
             return {
-                prefix:            prefix,
+                prefix: prefix,
                 transitionHandler: transitionHandler
             };
 
@@ -217,7 +217,7 @@ function countProperties(obj) {
 
             var tmpParams;
             with (parameters.variables) {
-            /*jshint ignore:start*/
+                /*jshint ignore:start*/
 
                 tmpParams = eval(parameters.functionObj.params/*params*/);
 
@@ -241,7 +241,7 @@ function countProperties(obj) {
                         });
                     }
                 });
-            /*jshint ignore:end*/
+                /*jshint ignore:end*/
             }
             return tmpParams;
 
@@ -267,7 +267,7 @@ function countProperties(obj) {
 
                 var savedStates = History.savedStates.length;
                 var myHost = window.location.protocol + '//' + window.location.hostname;
-                //se l'host è uguale dall'host da cui parte la chiamata
+                //se l'host à¨ uguale dall'host da cui parte la chiamata
                 var realPagePos = link.href.replace(myHost, '').indexOf('/');
                 var realPage = link.href.substring(realPagePos + 1 + myHost.length);
 
@@ -276,19 +276,19 @@ function countProperties(obj) {
                 if (savedStates !== History.savedStates.length) {
                     utils.log.call(self, 'INIZIO TRANSIZIONI Plug-in Disattivato');
                     data.overlay = $('<div/>').css({
-                        width:     '100%',
-                        height:    '100%',
-                        position:  'fixed',
-                        top:       0,
-                        left:      0,
+                        width: '100%',
+                        height: '100%',
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
                         'z-index': 2147483647,
-                        cursor:    'wait'
+                        cursor: 'wait'
                     });
 
                     if (data.debug) {
                         data.overlay.css({
                             'background-color': '#000',
-                            opacity:            0.03
+                            opacity: 0.03
                         });
                     }
                     if (data.enableOverlay) {
@@ -332,7 +332,7 @@ function countProperties(obj) {
             }
 
             if (check.error) {
-                $.error('L\'animazione su ' + check.child + ' non può essere assegnata in quanto esiste già un\'animazione assegnata al padre ' + check.parent);
+                $.error('L\'animazione su ' + check.child + ' non può essere assegnata in quanto esiste già  un\'animazione assegnata al padre ' + check.parent);
                 return false;
             }
             else {
@@ -344,12 +344,12 @@ function countProperties(obj) {
             //	}
         },
 
-        callPage: function (hash) {
+        callPage: function (url) {
 
             var self = this;
-            //clean hash
-            hash = hash.replace(/^\//, '');
-            hash = hash.replace(/\/$/, '');
+            //clean url
+            url = url.replace(/^\//, '');
+            url = url.replace(/\/$/, '');
 
             var data = self.data('AsyncNavigator');
 
@@ -362,8 +362,6 @@ function countProperties(obj) {
             //index.php
             //q,ajaxCall e prevPageUrl
             var tmpData = {
-                q:           hash,
-                ajaxCall:    true,
                 prevPageUrl: data.prevState
             };
 
@@ -372,16 +370,18 @@ function countProperties(obj) {
             }
 
             $.ajax({
-                url:      'index.php',
-                type:     'post',
-                data:     tmpData,
+                url: url,
+                type: 'get',
                 dataType: 'json',
-                success:  function (res) {
+
+                success: function (res) {
                     utils.managePage.call(self, res);
                 },
-                error:    function (res) {
+
+                error: function (res) {
                     utils.managePage.call(self, $.parseJSON(res.responseText));
                 },
+
                 complete: function (xhr) {
                     if (xhr.status === 404) {
                         data.prevState = '404';
@@ -400,7 +400,7 @@ function countProperties(obj) {
                 data.elementReady++;
                 if (data.actionsNumber === data.elementReady) {
                     utils.log.call(this, '########################### READY ' + data.elementReady + '/' + data.actionsNumber + ' Plug-in Attivato sui nuovi elementi');
-                    //re-inizializzazione su tutti gli elementi a cui è stato applicato il plugin
+                    //re-inizializzazione su tutti gli elementi a cui à¨ stato applicato il plugin
                     data.elementReady = 0;
                     $('body a').off('click.AsyncNavigator');
                     this.find(data.keys).off(data.transitionHandler);
@@ -423,7 +423,7 @@ function countProperties(obj) {
              data.endedActions++;
              if (data.actionsNumber === data.endedActions) {
              utils.log.call(self, '-------------------------------------------------------------FINE TRANSIZIONI ' + data.endedActions + '/' + data.actionsNumber + ' Plug-in Riattivato');
-             //re-inizializzazione su tutti gli elementi a cui è stato applicato il plugin
+             //re-inizializzazione su tutti gli elementi a cui à¨ stato applicato il plugin
              data.endedActions = 0;
              $('body a').off('click.AsyncNavigator');
 
@@ -502,7 +502,7 @@ function countProperties(obj) {
 
             if (data.preload) {
                 //individuazione delle immagini da caricare
-                //se l'immagine è ripetuta viene considerata solo una volta
+                //se l'immagine à¨ ripetuta viene considerata solo una volta
                 var images = utils.getImagesOnce.call($element);
                 var totalImagesNumber = images.length;
 
@@ -582,44 +582,45 @@ function countProperties(obj) {
             $.extend(transitionValue, tmpProperties);
 
             return {
-                durationValues:  {
+                durationValues: {
                     property: maxDurationProperty,
                     duration: maxDuration
                 },
-                cssValue:        cssValue,
+                cssValue: cssValue,
                 transitionValue: transitionValue
             };
         },
 
         applyTransition: function (page, actions, variables) {
+
             var self = this;
             var data = self.data('AsyncNavigator');
 
             if (!actions) {
                 actions = {};
                 actions[data.selector + ' > *'] = {
-                    'type':   'crossFade',
+                    'type': 'crossFade',
                     'params': {
                         'cssProperties': {
                             'opacity': {
-                                'duration':        '600',
-                                'delay':           '0',
+                                'duration': '600',
+                                'delay': '0',
                                 'timing-function': 'ease'
                             }
                         },
-                        'changeContent': 1,
-                        'initializer':   {
+                        'changeContent': true,
+                        'initializer': {
                             'function': '',
-                            'params':   '[]'
+                            'params': '[]'
                         },
-                        'destroyer':     {
+                        'destroyer': {
                             'function': '',
-                            'params':   '[]'
+                            'params': '[]'
                         }
                     }
                 };
             }
-            //conteggio delle proprietà css da processare
+            //conteggio delle proprietà  css da processare
             var tmp = countProperties.call(this, actions);
             data.actionsNumber = tmp.actions;
             data.keys = tmp.keys;
@@ -634,10 +635,13 @@ function countProperties(obj) {
             data.transitionHandler = browserInfo.transitionHandler;
             var allItems = $();
             var countEach = 0;
+
             $.each(actions, function (selector) {
-                var tmp;
-                tmp = page.find(selector.replace('body', ''));
+
+                var tmp = page.find(selector.replace('body', ''));
+
                 $.merge(allItems, tmp);
+
                 if ((++countEach) === data.actionsNumber) {
                     utils.preload.call(self, allItems, function () {
                         data.loader.removeClass('loading');
@@ -651,38 +655,37 @@ function countProperties(obj) {
 
             common: {
 
-                add: function (value, elementInDOM, elementInPage, variables, key, target) {
+                add: function (value, elementInDOM, incomingElement, variables, key, target) {
+
                     var self = this;
 
                     //check sull'esistenza dell'oggetto nel DOM
                     if (elementInDOM.length) {
                         //distruttore
-                        utils.execFunction.call(self,
-                            {
-                                scopeObj:    elementInDOM,
-                                functionObj: value.params.destroyer,
-                                variables:   variables
-                            });
+                        utils.execFunction.call(self, {
+                            scopeObj: elementInDOM,
+                            functionObj: value.params.destroyer,
+                            variables: variables
+                        });
                         //rimozione dal DOM
                         elementInDOM.remove();
                     }
                     //check sull'esistenza dell'oggetto nella pagina chiamata
-                    if (elementInPage.length) {
+                    if (incomingElement.length) {
                         //inserimento oggetto nel DOM tramite il target
-                        var appended = $(target).append(elementInPage);
+                        var appended = $(target).append(incomingElement);
                         utils.elementReady.call(self, key);
                         //inizializzatore
                         utils.execFunction.call(self,
                             {
-                                scopeObj:    appended,
+                                scopeObj: appended,
                                 functionObj: value.params.initializer,
-                                variables:   variables
+                                variables: variables
                             });
                         //chiamata di fine animazione
                         utils.transitionEnded.call(self, 'ADDED: ' + key);
-                        utils.setEndClass.call(elementInPage);
-                    }
-                    else {
+                        utils.setEndClass.call(incomingElement);
+                    } else {
                         utils.elementReady.call(self, key);
                         //se l'oggetto non viene trovato nella pagina entrante
                         //viene chiamata direttamente la funzione di fine animazione
@@ -692,7 +695,7 @@ function countProperties(obj) {
 
                 crossSlide: {
 
-                    init: function (value, elementInDOM, elementInPage, variables) {
+                    init: function (value, elementInDOM, incomingElement, variables) {
 
                         var self = this;
                         var prop = utils.getCssProperties.call(self, value.params.cssProperties);
@@ -705,7 +708,7 @@ function countProperties(obj) {
                         content.data('duration', prop.out.durationValues.duration);
 
                         content.data('elementInDOM', elementInDOM);
-                        content.data('elementInPage', elementInPage);
+                        content.data('incomingElement', incomingElement);
 
 
                         var elementInDOMWidth = elementInDOM.width();
@@ -713,8 +716,8 @@ function countProperties(obj) {
 
                         elementInDOM.width(elementInDOMWidth);
                         elementInDOM.height(elementInDOMHeight);
-                        elementInPage.width(elementInDOMWidth);
-                        elementInPage.height(elementInDOMHeight);
+                        incomingElement.width(elementInDOMWidth);
+                        incomingElement.height(elementInDOMHeight);
 
                         var contentCss;
                         var action;
@@ -725,10 +728,10 @@ function countProperties(obj) {
                                 reset = {'top': 0};
                                 action = 'before';
                                 contentCss = {
-                                    'top':    -elementInDOMHeight,
-                                    'left':   0,
+                                    'top': -elementInDOMHeight,
+                                    'left': 0,
                                     'height': elementInDOMHeight * 2,
-                                    'width':  elementInDOMWidth
+                                    'width': elementInDOMWidth
                                 };
                                 break;
                             case 'bottom':	//append
@@ -736,32 +739,32 @@ function countProperties(obj) {
                                 action = 'after';
                                 contentCss = {
                                     'bottom': 0,
-                                    'left':   0,
+                                    'left': 0,
                                     'height': elementInDOMHeight * 2,
-                                    'width':  elementInDOMWidth
+                                    'width': elementInDOMWidth
                                 };
                                 break;
                             case 'right':	//append
                                 elementInDOM.css('float', 'left');
-                                elementInPage.css('float', 'left');
+                                incomingElement.css('float', 'left');
                                 reset = {'right': elementInDOMWidth};
                                 action = 'after';
                                 contentCss = {
-                                    'top':    0,
-                                    'right':  0,
-                                    'width':  elementInDOMWidth * 2,
+                                    'top': 0,
+                                    'right': 0,
+                                    'width': elementInDOMWidth * 2,
                                     'height': elementInDOMHeight
                                 };
                                 break;
                             case 'left':	//prepend
                                 elementInDOM.css('float', 'left');
-                                elementInPage.css('float', 'left');
+                                incomingElement.css('float', 'left');
                                 reset = {'left': 0};
                                 action = 'before';
                                 contentCss = {
-                                    'top':    0,
-                                    'left':   -elementInDOMWidth,
-                                    'width':  elementInDOMWidth * 2,
+                                    'top': 0,
+                                    'left': -elementInDOMWidth,
+                                    'width': elementInDOMWidth * 2,
                                     'height': elementInDOMHeight
                                 };
                                 break;
@@ -771,8 +774,8 @@ function countProperties(obj) {
 
                         var wrapperCss = {
                             'overflow': 'hidden',
-                            'width':    elementInDOMWidth,
-                            'height':   elementInDOMHeight
+                            'width': elementInDOMWidth,
+                            'height': elementInDOMHeight
                         };
 
                         content.css(transitionValue);
@@ -780,17 +783,17 @@ function countProperties(obj) {
                         wrapper.css(wrapperCss);
 
                         elementInDOM.wrap(wrapper).wrap(content);
-                        elementInDOM[action](elementInPage);
+                        elementInDOM[action](incomingElement);
 
                         utils.execFunction.call(self, {
-                            scopeObj:    elementInPage,
+                            scopeObj: incomingElement,
                             functionObj: value.params.initializer,
-                            variables:   variables
+                            variables: variables
                         });
 
                         return {
                             content: elementInDOM.parent(),
-                            reset:   reset
+                            reset: reset
                         };
                     },
 
@@ -799,35 +802,35 @@ function countProperties(obj) {
                         var self = this;
                         //esecuzione distruttore
                         utils.execFunction.call(self, {
-                            scopeObj:    handledElement.data('elementInDOM'),
+                            scopeObj: handledElement.data('elementInDOM'),
                             functionObj: value.params.destroyer,
-                            variables:   variables
+                            variables: variables
                         });
 
                         //rimozione dal DOM
                         handledElement.data('elementInDOM').remove();
 
-                        var elementInPage = handledElement.data('elementInPage');
+                        var incomingElement = handledElement.data('incomingElement');
 
-                        elementInPage.unwrap();
-                        elementInPage.unwrap();
-                        elementInPage.css({
-                            width:   '',
-                            height:  '',
+                        incomingElement.unwrap();
+                        incomingElement.unwrap();
+                        incomingElement.css({
+                            width: '',
+                            height: '',
                             'float': ''
                         });
                         utils.log.call(self, 'FINE ANIMAZIONE D\' USCITA(SLIDE) ' + key);
 
                         //chiamata di fine animazione
                         utils.transitionEnded.call(self, key);
-                        utils.setEndClass.call(elementInPage);
+                        utils.setEndClass.call(incomingElement);
                         utils.elementReady.call(self, key);
                     }
                 },
 
                 transition: {
 
-                    init:    function (elementInDOM, elementInPage, cssProperties) {
+                    init: function (elementInDOM, incomingElement, cssProperties) {
 
                         var self = this;
                         var prop = utils.getCssProperties.call(self, cssProperties);
@@ -836,28 +839,36 @@ function countProperties(obj) {
                         elementInDOM.data('duration', prop.out.durationValues.duration);
                         elementInDOM.data('propertyIn', prop['in'].durationValues.property);
                         elementInDOM.data('durationIn', prop['in'].durationValues.duration);
-                        elementInPage.data('property', prop['in'].durationValues.property);
-                        elementInPage.data('duration', prop['in'].durationValues.duration);
+                        incomingElement.data('property', prop['in'].durationValues.property);
+                        incomingElement.data('duration', prop['in'].durationValues.duration);
 
                         return {
-                            cssValue:           prop['in'].cssValue,
-                            cssValueOut:        prop.out.cssValue,
-                            transitionValue:    prop['in'].transitionValue,
+                            cssValue: prop['in'].cssValue,
+                            cssValueOut: prop.out.cssValue,
+                            transitionValue: prop['in'].transitionValue,
                             transitionValueOut: prop.out.transitionValue
                         };
                     },
-                    destroy: function () {}
+
+                    destroy: function () {
+                    }
+
                 },
 
                 crossFade: {
-                    init:    function () {},
-                    destroy: function () {}
+
+                    init: function () {
+                    },
+                    destroy: function () {
+                    }
+
                 }
+
             },
 
             jquery: {
 
-                transition: function (value, elementInDOM, elementInPage, variables, key, target) {
+                transition: function (value, elementInDOM, incomingElement, variables, key, target) {
 
                     var self = this;
                     var cssValues = {};
@@ -867,10 +878,11 @@ function countProperties(obj) {
                     var originalPositions = {};
                     var delay = {};
 
-                    //creazione propietà css da applicare agli elementi
-                    //le proprietà css3 vengono eliminate per incopatibilità del browser
+                    //creazione propietà  css da applicare agli elementi
+                    //le proprietà  css3 vengono eliminate per incopatibilità  del browser
                     //opacity viene convertito con i filtri alpha riconosciuti da Internet Explorer
                     $.each(value.params.cssProperties, function (direction, properties) {
+
                         counter = 0;
                         originalPositions[direction] = {};
                         cssIeValues[direction] = {};
@@ -891,6 +903,7 @@ function countProperties(obj) {
                                 } else {
                                     delay[direction] += parseInt(val.delay, 10);
                                 }
+
                                 delay[direction] = delay[direction] / counter; //media durata
 
                                 originalPositions[direction][i] = elementInDOM.css(i) || 0;
@@ -899,24 +912,26 @@ function countProperties(obj) {
                                     val.value = 'alpha(opacity = ' + parseFloat(val.value) * 100 + ')';
                                 }
                                 cssIeValues[direction][i] = val.value;
+
                             }
                         });
 
                     });
 
                     if (elementInDOM.length) {
-                        //salvataggio nell'oggetto delle proprietà CSS originali
+                        //salvataggio nell'oggetto delle proprietà  CSS originali
                         elementInDOM.data('originalPositions', originalPositions['in']);
                         elementInDOM.data('duration', duration['in']);
                         elementInDOM.data('delay', delay['in']);
-                        //animazione delle proprietà CSS impostate
+                        //animazione delle proprietà  CSS impostate
                         setTimeout(function () {
+
                             elementInDOM.animate(cssValues.out, duration.out, function () {
+
                                 var handledElement = $(this);
                                 var originalPositions = handledElement.data('originalPositions');
                                 var avgDuration = handledElement.data('duration');
                                 var avgDelay = handledElement.data('delay');
-
                                 var relatedElement = handledElement.data('relatedElement');
 
                                 if (relatedElement.length) {
@@ -925,9 +940,9 @@ function countProperties(obj) {
 
                                         handledElement.replaceWith(relatedElement.css(cssValues.out));
                                         utils.execFunction.call(self, {
-                                            scopeObj:    relatedElement,
+                                            scopeObj: relatedElement,
                                             functionObj: value.params.initializer,
-                                            variables:   variables
+                                            variables: variables
                                         });
                                     }
 
@@ -941,12 +956,11 @@ function countProperties(obj) {
 
                                 } else {
 
-                                    utils.execFunction.call(self,
-                                        {
-                                            scopeObj:    handledElement,
-                                            functionObj: value.params.destroyer,
-                                            variables:   variables
-                                        });
+                                    utils.execFunction.call(self, {
+                                        scopeObj: handledElement,
+                                        functionObj: value.params.destroyer,
+                                        variables: variables
+                                    });
                                     handledElement.remove();
                                     utils.elementReady.call(self, key);
                                     utils.transitionEnded.call(self, key);
@@ -957,33 +971,33 @@ function countProperties(obj) {
 
                     } else {
 
-                        if (elementInPage.length) {
+                        if (incomingElement.length) {
 
                             var endPositions = cssValues['in'];
 
-                            elementInPage.css(cssIeValues.out);
+                            incomingElement.css(cssIeValues.out);
 
-                            appendAndWait(target, elementInPage);
+                            appendAndWait(target, incomingElement);
 
-                            elementInPage.data('startPositions', cssValues.out);
+                            incomingElement.data('startPositions', cssValues.out);
 
                             //initialization
                             utils.execFunction.call(self, {
-                                scopeObj:    elementInPage,
+                                scopeObj: incomingElement,
                                 functionObj: value.params.initializer,
-                                variables:   variables
+                                variables: variables
                             });
 
-                            elementInPage.animate(endPositions, duration['in'], function () {
+                            incomingElement.animate(endPositions, duration['in'], function () {
                                 utils.elementReady.call(self, key);
                                 utils.transitionEnded.call(self, key);
-                                utils.setEndClass.call(elementInPage);
+                                utils.setEndClass.call(incomingElement);
                             });
                         }
                     }
                 },
 
-                crossFade:  function (value, elementInDOM, elementInPage, variables, key, target) {
+                crossFade: function (value, elementInDOM, incomingElement, variables, key, target) {
 
                     var self = this;
                     var duration = parseInt(value.params.cssProperties.opacity.duration, 10);
@@ -995,9 +1009,9 @@ function countProperties(obj) {
                             var relatedElement = handledElement.data('relatedElement');
                             utils.execFunction.call(self,
                                 {
-                                    scopeObj:    handledElement,
+                                    scopeObj: handledElement,
                                     functionObj: value.params.destroyer,
-                                    variables:   variables
+                                    variables: variables
                                 });
                             handledElement.remove();
 
@@ -1008,45 +1022,46 @@ function countProperties(obj) {
                             }
                         });
 
-                        if (elementInPage.length) {
-                            elementInPage.css('z-index', 1);
+                        if (incomingElement.length) {
+                            incomingElement.css('z-index', 1);
 
-                            prependAndWait(elementInDOM.parent(), elementInPage);
+                            prependAndWait(elementInDOM.parent(), incomingElement);
 
                             utils.execFunction.call(self, {
-                                scopeObj:    elementInPage,
+                                scopeObj: incomingElement,
                                 functionObj: value.params.initializer,
-                                variables:   variables
+                                variables: variables
                             });
 
                             utils.log.call(self, 'FINE ANIMAZIONE D\' ENTRATA' + key);
                             utils.transitionEnded.call(self, key);
                             utils.elementReady.call(self, key);
-                            utils.setEndClass.call(elementInPage);
+                            utils.setEndClass.call(incomingElement);
                             /*	});*/
                         }
                     } else {
-                        if (elementInPage.length) {
+                        if (incomingElement.length) {
 
-                            elementInPage.css('z-index', 1);
+                            incomingElement.css('z-index', 1);
 
-                            prependAndWait(target, elementInPage.css('opacity', 0.01));
+                            prependAndWait(target, incomingElement.css('opacity', 0.01));
 
                             utils.execFunction.call(self, {
-                                scopeObj:    elementInPage,
+                                scopeObj: incomingElement,
                                 functionObj: value.params.initializer,
-                                variables:   variables
+                                variables: variables
                             });
 
-                            elementInPage.animate({'opacity': 1}, duration, function () {
+                            incomingElement.animate({'opacity': 1}, duration, function () {
                                 utils.log.call(self, 'FINE ANIMAZIONE D\'ENTRATA ' + key);
                                 utils.elementReady.call(self, key);
                                 utils.transitionEnded.call(self, key);
-                                utils.setEndClass.call(elementInPage);
+                                utils.setEndClass.call(incomingElement);
                             });
                         }
                     }
                 },
+
                 crossSlide: function (value, variables, animationData, key) {
 
                     var self = this;
@@ -1055,15 +1070,17 @@ function countProperties(obj) {
                         utils.animation.common.crossSlide.destroy.call(self, value, variables, $(this), key);
                     });
                 }
+
             },
 
             css3: {
-                transition: function (value, elementInDOM, elementInPage, variables, key, target) {
+
+                transition: function (value, elementInDOM, incomingElement, variables, key, target) {
 
                     var self = this;
                     var data = self.data('AsyncNavigator');
                     var transition = data.prefix + 'transition';
-                    var prop = utils.animation.common.transition.init.call(self, elementInDOM, elementInPage, value.params.cssProperties);
+                    var prop = utils.animation.common.transition.init.call(self, elementInDOM, incomingElement, value.params.cssProperties);
 
                     if (elementInDOM.length) {
                         // esce elementInDOM
@@ -1079,14 +1096,13 @@ function countProperties(obj) {
                                     //se l'elemento esiste nella pagina entrante
                                     if (relatedElement.length) {
                                         //esecuzione del distruttore
-                                        utils.execFunction.call(self,
-                                            {
-                                                scopeObj:    handledElement,
-                                                functionObj: value.params.destroyer,
-                                                variables:   variables
-                                            });
+                                        utils.execFunction.call(self, {
+                                            scopeObj: handledElement,
+                                            functionObj: value.params.destroyer,
+                                            variables: variables
+                                        });
 
-                                        // entra elementInPage
+                                        // entra incomingElement
                                         //copia dello stile tra gli elementi
                                         relatedElement.attr('style', handledElement.attr('style'));
 
@@ -1095,12 +1111,11 @@ function countProperties(obj) {
                                         utils.elementReady.call(self, key);
 
                                         //inizializzatore
-                                        utils.execFunction.call(self,
-                                            {
-                                                scopeObj:    relatedElement,
-                                                functionObj: value.params.initializer,
-                                                variables:   variables
-                                            });
+                                        utils.execFunction.call(self, {
+                                            scopeObj: relatedElement,
+                                            functionObj: value.params.initializer,
+                                            variables: variables
+                                        });
 
                                         /*********************************************/
                                         //handling dell'evento d'entrata?
@@ -1123,30 +1138,31 @@ function countProperties(obj) {
                                         setTimeout(function () {
                                             relatedElement.css(prop.transitionValue);
                                         }, 5);
-                                    }
-                                    else {
-                                        utils.execFunction.call(self,
-                                            {
-                                                scopeObj:    handledElement,
-                                                functionObj: value.params.destroyer,
-                                                variables:   variables
-                                            });
+
+                                    } else {
+
+                                        utils.execFunction.call(self, {
+                                            scopeObj: handledElement,
+                                            functionObj: value.params.destroyer,
+                                            variables: variables
+                                        });
                                         handledElement.remove();
                                         //utils.elementReady.call(self,key)
                                         utils.log.call(self, 'FINE ANIMAZIONE D\'USCITA(TRANSITION) ' + key);
                                         //chiamata di fine animazione
                                         utils.elementReady.call(self, key);
                                         utils.transitionEnded.call(self, key);
-                                        //non serve perché l'elemento è stato rimosso dal DOM
+                                        //non serve perchà© l'elemento à¨ stato rimosso dal DOM
                                         //utils.setEndClass.call(handledElement);
                                     }
+
                                 } else {// elementInDOM deve rientrare
                                     //inizializzatore
                                     //utils.elementReady.call(self,key)
                                     utils.execFunction.call(self, {
-                                        scopeObj:    elementInDOM,
+                                        scopeObj: elementInDOM,
                                         functionObj: value.params.initializer,
-                                        variables:   variables
+                                        variables: variables
                                     });
                                     /*********************************************/
                                     //handling dell'evento d'entrata?
@@ -1183,21 +1199,21 @@ function countProperties(obj) {
 
                     } else {
 
-                        if (elementInPage.length) {
-                            //entra elementInPage
+                        if (incomingElement.length) {
+                            //entra incomingElement
                             //impostazione dei parametri di partenza con i valori di OUT
-                            elementInPage.css(prop.transitionValueOut);
-                            elementInPage.css(transition, prop.transitionValue[transition]);
+                            incomingElement.css(prop.transitionValueOut);
+                            incomingElement.css(transition, prop.transitionValue[transition]);
                             //inserimento elemento d'entrata nel DOM
-                            $(target).append(elementInPage);
+                            $(target).append(incomingElement);
                             //utils.elementReady.call(self,key);
-                            utils.execFunction.call(self,
-                                {
-                                    scopeObj:    elementInPage,
-                                    functionObj: value.params.initializer,
-                                    variables:   variables
-                                });
-                            elementInPage.on(data.transitionHandler, function (e) {
+                            utils.execFunction.call(self, {
+                                scopeObj: incomingElement,
+                                functionObj: value.params.initializer,
+                                variables: variables
+                            });
+
+                            incomingElement.on(data.transitionHandler, function (e) {
                                 var handledElement = $(this);
                                 if (e.originalEvent.propertyName === handledElement.data('property') /*&& (parseInt(Math.round(e.originalEvent.elapsedTime*1000)) === andledElement.data('duration')*/) {
                                     //eliminazione dell'evento
@@ -1210,14 +1226,16 @@ function countProperties(obj) {
                                     utils.setEndClass.call(handledElement);
                                 }
                             });
+
                             setTimeout(function () {
-                                elementInPage.css(prop.transitionValue);
+                                incomingElement.css(prop.transitionValue);
                             }, 5);
+
                         }
                     }
                 },
 
-                crossFade:  function (value, elementInDOM, elementInPage, variables, key, target) {
+                crossFade: function (value, elementInDOM, incomingElement, variables, key, target) {
                     var self = this;
                     var data = self.data('AsyncNavigator');
 
@@ -1226,7 +1244,7 @@ function countProperties(obj) {
                     var cssParam = 'opacity ' + params.duration + 'ms ' + params['timing-function'] + ' ' + params.delay + 'ms';
                     //salvataggio dati
                     elementInDOM.data('duration', params.duration);
-                    elementInPage.data('duration', params.duration);
+                    incomingElement.data('duration', params.duration);
                     //bind di fine animazione
                     elementInDOM.on(data.transitionHandler, function (e) {
                         var handledElement = $(this);
@@ -1237,9 +1255,9 @@ function countProperties(obj) {
                             //esecuzione distruttore
                             utils.execFunction.call(self,
                                 {
-                                    scopeObj:    handledElement,
+                                    scopeObj: handledElement,
                                     functionObj: value.params.destroyer,
-                                    variables:   variables
+                                    variables: variables
                                 });
                             var relatedElement = handledElement.data('relatedElement');
                             //rimozione dal DOM
@@ -1252,23 +1270,23 @@ function countProperties(obj) {
                         }
                     });
 
-                    if (elementInPage.length) {
+                    if (incomingElement.length) {
                         if (elementInDOM.length) {
                             elementInDOM.css('z-index', 2);
-                            elementInDOM.first().before(elementInPage.css('z-index', 1));
+                            elementInDOM.first().before(incomingElement.css('z-index', 1));
                         } else {
-                            elementInPage.css('opacity', 0);
-                            $(target).prepend(elementInPage.css('z-index', 1));
+                            incomingElement.css('opacity', 0);
+                            $(target).prepend(incomingElement.css('z-index', 1));
                         }
                         if (elementInDOM.length) {
                             //esecuzione inizializzatore
                             utils.execFunction.call(self, {
-                                scopeObj:    elementInPage,
+                                scopeObj: incomingElement,
                                 functionObj: value.params.initializer,
-                                variables:   variables
+                                variables: variables
                             });
                         } else {
-                            elementInPage.on(data.transitionHandler, function (e) {
+                            incomingElement.on(data.transitionHandler, function (e) {
 
                                 var handledElement = $(this);
 
@@ -1282,27 +1300,29 @@ function countProperties(obj) {
                                 }
                             });
                             //impostazione parametri di animazione
-                            elementInPage.css(data.prefix + 'transition', cssParam);
+                            incomingElement.css(data.prefix + 'transition', cssParam);
 
                             setTimeout(function () {
                                 //esecuzione inizializzatore
                                 utils.execFunction.call(self, {
-                                    scopeObj:    elementInPage,
+                                    scopeObj: incomingElement,
                                     functionObj: value.params.initializer,
-                                    variables:   variables
+                                    variables: variables
                                 });
-                                //delay di 5ms per far rendere conto al browser che la proprietà è cambiata
-                                elementInPage.css('opacity', 1);
+                                //delay di 5ms per far rendere conto al browser che la proprietà  à¨ cambiata
+                                incomingElement.css('opacity', 1);
                             }, 5);
                         }
                     }
                     elementInDOM.css(data.prefix + 'transition', cssParam);
                     setTimeout(function () {
-                        //delay di 5ms per far rendere conto al browser che la proprietà è cambiata
+                        //delay di 5ms per far rendere conto al browser che la proprietà  à¨ cambiata
                         elementInDOM.css('opacity', 0);
                     }, 5);
                 },
+
                 crossSlide: function (value, variables, animationData, key) {
+
                     var self = this;
                     var data = self.data('AsyncNavigator');
 
@@ -1346,20 +1366,20 @@ function countProperties(obj) {
                 elementInDOM.removeClass('ended').addClass('running');
                 // il body non viene parsato da jQuery
                 // quindi per selezionare l'intero contenuto
-                // è necessario eliminare il body dalla ricerca
+                // à¨ necessario eliminare il body dalla ricerca
                 // per es. se si deve cercare 'body > *'
-                // il selettore verrà convertito in '> *'
+                // il selettore verrà  convertito in '> *'
                 var selector = key.replace('body', '');
                 //rimuove eventulai meta tag rimasti
-                var elementInPage = page.find(selector).not('meta');
+                var incomingElement = page.find(selector).not('meta');
 
-                elementInPage.removeClass('ended').addClass('running');
+                incomingElement.removeClass('ended').addClass('running');
 
-                elementInDOM.data('relatedElement', elementInPage);
-                elementInPage.data('relatedElement', elementInDOM);
+                elementInDOM.data('relatedElement', incomingElement);
+                incomingElement.data('relatedElement', elementInDOM);
 
                 //se il selettore non viene trovato ne nel DOM ne nella pagina entrante
-                if (!elementInDOM.length && !elementInPage.length) {
+                if (!elementInDOM.length && !incomingElement.length) {
                     utils.log.call(self, key + ' non trovata in nesuna delle pagine');
                     utils.elementReady.call(self, key);
                     //chiamata di fine animazione
@@ -1367,28 +1387,28 @@ function countProperties(obj) {
 
                     return; //continua il ciclo 'each'
                 }
-                //l'aggiunta di un elemento è indipendente dal browser utilizzato
+                //l'aggiunta di un elemento à¨ indipendente dal browser utilizzato
                 var animationData;
                 if (value.type === 'add') {
-                    utils.animation.common.add.call(self, value, elementInDOM, elementInPage, variables, key, target);
+                    utils.animation.common.add.call(self, value, elementInDOM, incomingElement, variables, key, target);
                 } else {
 
                     var animationHandler = $.browser.msie ? 'jquery' : 'css3';
                     var animator = utils.animation[animationHandler];
-                    //x la merda di internet exploDer
+
                     switch (value.type) {
                         case 'transition':
-                            animator.transition.call(self, value, elementInDOM, elementInPage, variables, key, target);
+                            animator.transition.call(self, value, elementInDOM, incomingElement, variables, key, target);
                             break;
                         case 'crossFade':
-                            //l'opzione crossFade necessita della proprietà opacity
+                            //l'opzione crossFade necessita della proprietà  opacity
                             //per la customizzazione del delay e della durata
-                            //l'effetto sarà sempre quello di far sparire
+                            //l'effetto sarà  sempre quello di far sparire
                             //completamente l'elemento per poi sostituirlo nel DOM
-                            animator.crossFade.call(self, value, elementInDOM, elementInPage, variables, key, target);
+                            animator.crossFade.call(self, value, elementInDOM, incomingElement, variables, key, target);
                             break;
                         case 'crossSlide':
-                            animationData = utils.animation.common.crossSlide.init.call(self, value, elementInDOM, elementInPage, variables, key, target);
+                            animationData = utils.animation.common.crossSlide.init.call(self, value, elementInDOM, incomingElement, variables, key, target);
                             animator.crossSlide.call(self, value, variables, animationData, key);
                             break;
                         default:
@@ -1430,12 +1450,34 @@ function countProperties(obj) {
                     // TODO cosa fare per le chiamate esterne?
                     return true;
                 }
+
                 return false;
             });
 
             if (data.overlay) {
                 data.overlay.remove();
             }
+        },
+
+        findElementsToExclude: function (data) {
+
+            var excludedElements = [];
+            $(data.exclude).each(function () {
+
+                var tmp = $(this);
+
+                if (this.nodeName !== 'A') {
+                    tmp = $(this).find('a');
+                }
+
+                excludedElements = $.merge(excludedElements, tmp);
+
+            });
+
+            var anchorsSet = me.find('a').not(excludedElements).not('[target=_blank]').not('[href^=#]').not('[href^=mailto]');
+
+            return anchorsSet;
+
         },
 
         init: function (options) {
@@ -1485,11 +1527,11 @@ function countProperties(obj) {
             }
 
             var settings = $.extend({
-                'exclude':       '',
-                'debug':         false,
-                'preload':       true,
+                'exclude': '',
+                'debug': false,
+                'preload': true,
                 'enableOverlay': true,
-                'loader':        $()
+                'loader': $()
             }, options);
 
             data.actionsNumber = 0;
@@ -1510,19 +1552,7 @@ function countProperties(obj) {
             //3) link ad email (mailto)
             //in più, tramite l'opzione 'exclude' si possono escludere uno o più elementi
 
-            var excludedElements = [];
-            $(data.exclude).each(function () {
-                var tmp;
-                if (this.nodeName === 'A') {
-                    tmp = $(this);
-                } else {
-                    tmp = $(this).find('a');
-                }
-                excludedElements = $.merge(excludedElements, tmp);
-            });
-
-            var anchorsSet = me.find('a').not(excludedElements).not('[target=_blank]').not('[href^=#]').not('[href^=mailto]');
-            data.anchorsSet = anchorsSet;
+            data.anchorsSet = this.findElementsToExclude(data);
 
             methods.bindAsyncNavigation.call(me);
 
@@ -1539,6 +1569,7 @@ function countProperties(obj) {
                 $this.removeData('AsyncNavigator');
             });
         }
+
     };
 
     $.fn.AsyncNavigator = function (method) {

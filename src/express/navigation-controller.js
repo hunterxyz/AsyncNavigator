@@ -2,18 +2,19 @@
 
 var interceptor = require('express-interceptor');
 
-var navigationControllerInterceptor = interceptor(function (response) {
+var navigationControllerInterceptor = interceptor(function (request, response) {
 
     return {
 
         isInterceptable: function () {
-            return true;
+            var hasToBeIntercepted = !!request.headers['async-navigator'];
+            return hasToBeIntercepted;
         },
 
         intercept: function (body, send) {
 
             var newBody = JSON.stringify({
-                page:    body,
+                page: body,
                 actions: {}
             });
 
