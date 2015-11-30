@@ -5,7 +5,7 @@
  *
  * options:
  *
- * exclude: selettore css o oggetto jQuery (può puntare anche ad una ancora direttamente v0.2)
+ * exclude: selettore css o oggetto jQuery (puÃ² puntare anche ad una ancora direttamente v0.2)
  * debug: attiva il verbose mode
  * preload: attiva il preload dei contenuti, default a true
  */
@@ -267,7 +267,7 @@ function countProperties(obj) {
 
                 var savedStates = History.savedStates.length;
                 var myHost = window.location.protocol + '//' + window.location.hostname;
-                //se l'host è uguale dall'host da cui parte la chiamata
+                //se l'host Ã¨ uguale dall'host da cui parte la chiamata
                 var realPagePos = link.href.replace(myHost, '').indexOf('/');
                 var realPage = link.href.substring(realPagePos + 1 + myHost.length);
 
@@ -332,7 +332,7 @@ function countProperties(obj) {
             }
 
             if (check.error) {
-                $.error('L\'animazione su ' + check.child + ' non può essere assegnata in quanto esiste già un\'animazione assegnata al padre ' + check.parent);
+                $.error('L\'animazione su ' + check.child + ' non puÃ² essere assegnata in quanto esiste giÃ  un\'animazione assegnata al padre ' + check.parent);
                 return false;
             }
             else {
@@ -400,7 +400,7 @@ function countProperties(obj) {
                 data.elementReady++;
                 if (data.actionsNumber === data.elementReady) {
                     utils.log.call(this, '########################### READY ' + data.elementReady + '/' + data.actionsNumber + ' Plug-in Attivato sui nuovi elementi');
-                    //re-inizializzazione su tutti gli elementi a cui è stato applicato il plugin
+                    //re-inizializzazione su tutti gli elementi a cui Ã¨ stato applicato il plugin
                     data.elementReady = 0;
                     $('body a').off('click.AsyncNavigator');
                     this.find(data.keys).off(data.transitionHandler);
@@ -423,7 +423,7 @@ function countProperties(obj) {
              data.endedActions++;
              if (data.actionsNumber === data.endedActions) {
              utils.log.call(self, '-------------------------------------------------------------FINE TRANSIZIONI ' + data.endedActions + '/' + data.actionsNumber + ' Plug-in Riattivato');
-             //re-inizializzazione su tutti gli elementi a cui è stato applicato il plugin
+             //re-inizializzazione su tutti gli elementi a cui Ã¨ stato applicato il plugin
              data.endedActions = 0;
              $('body a').off('click.AsyncNavigator');
 
@@ -502,7 +502,7 @@ function countProperties(obj) {
 
             if (data.preload) {
                 //individuazione delle immagini da caricare
-                //se l'immagine è ripetuta viene considerata solo una volta
+                //se l'immagine Ã¨ ripetuta viene considerata solo una volta
                 var images = utils.getImagesOnce.call($element);
                 var totalImagesNumber = images.length;
 
@@ -619,7 +619,7 @@ function countProperties(obj) {
                     }
                 };
             }
-            //conteggio delle proprietà css da processare
+            //conteggio delle proprietÃ  css da processare
             var tmp = countProperties.call(this, actions);
             data.actionsNumber = tmp.actions;
             data.keys = tmp.keys;
@@ -867,8 +867,8 @@ function countProperties(obj) {
                     var originalPositions = {};
                     var delay = {};
 
-                    //creazione propietà css da applicare agli elementi
-                    //le proprietà css3 vengono eliminate per incopatibilità del browser
+                    //creazione propietÃ  css da applicare agli elementi
+                    //le proprietÃ  css3 vengono eliminate per incopatibilitÃ  del browser
                     //opacity viene convertito con i filtri alpha riconosciuti da Internet Explorer
                     $.each(value.params.cssProperties, function (direction, properties) {
                         counter = 0;
@@ -905,11 +905,11 @@ function countProperties(obj) {
                     });
 
                     if (elementInDOM.length) {
-                        //salvataggio nell'oggetto delle proprietà CSS originali
+                        //salvataggio nell'oggetto delle proprietÃ  CSS originali
                         elementInDOM.data('originalPositions', originalPositions['in']);
                         elementInDOM.data('duration', duration['in']);
                         elementInDOM.data('delay', delay['in']);
-                        //animazione delle proprietà CSS impostate
+                        //animazione delle proprietÃ  CSS impostate
                         setTimeout(function () {
                             elementInDOM.animate(cssValues.out, duration.out, function () {
                                 var handledElement = $(this);
@@ -973,6 +973,7 @@ function countProperties(obj) {
                                 functionObj: value.params.initializer,
                                 variables:   variables
                             });
+
                             elementInPage.animate(endPositions, duration['in'], function () {
                                 utils.elementReady.call(self, key);
                                 utils.transitionEnded.call(self, key);
@@ -1069,7 +1070,7 @@ function countProperties(obj) {
                         elementInDOM.css(transition, prop.cssValueOut);
                         elementInDOM.on(data.transitionHandler, function (e) {
                             var handledElement = $(this);
-                            //se viene notificato l'evento che dura più a lungo tenendo conto del delay
+                            //se viene notificato l'evento che dura piÃ¹ a lungo tenendo conto del delay
                             if (e.originalEvent.propertyName === handledElement.data('property') /*&& (parseInt(Math.round(e.originalEvent.elapsedTime*1000)) === andledElement.data('duration')*/) {
                                 //eliminazione dell'evento
                                 handledElement.off(data.transitionHandler);
@@ -1136,7 +1137,7 @@ function countProperties(obj) {
                                         //chiamata di fine animazione
                                         utils.elementReady.call(self, key);
                                         utils.transitionEnded.call(self, key);
-                                        //non serve perchè l'elemento è stato rimosso dal DOM
+                                        //non serve perchÃ© l'elemento Ã¨ stato rimosso dal DOM
                                         //utils.setEndClass.call(handledElement);
                                     }
                                 } else {// elementInDOM deve rientrare
@@ -1229,7 +1230,7 @@ function countProperties(obj) {
                     //bind di fine animazione
                     elementInDOM.on(data.transitionHandler, function (e) {
                         var handledElement = $(this);
-                        //se viene notificata la fine dell'evento che dura più a lungo
+                        //se viene notificata la fine dell'evento che dura piÃ¹ a lungo
                         if (e.originalEvent.propertyName === 'opacity' /*&& (parseInt(Math.round(e.originalEvent.elapsedTime*1000)) === andledElement.data('duration')*/) {
                             //eliminazione dell'evento
                             handledElement.off(data.transitionHandler);
@@ -1290,14 +1291,14 @@ function countProperties(obj) {
                                     functionObj: value.params.initializer,
                                     variables:   variables
                                 });
-                                //delay di 5ms per far rendere conto al browser che la proprietà è cambiata
+                                //delay di 5ms per far rendere conto al browser che la proprietÃ  Ã¨ cambiata
                                 elementInPage.css('opacity', 1);
                             }, 5);
                         }
                     }
                     elementInDOM.css(data.prefix + 'transition', cssParam);
                     setTimeout(function () {
-                        //delay di 5ms per far rendere conto al browser che la proprietà è cambiata
+                        //delay di 5ms per far rendere conto al browser che la proprietÃ  Ã¨ cambiata
                         elementInDOM.css('opacity', 0);
                     }, 5);
                 },
@@ -1345,9 +1346,9 @@ function countProperties(obj) {
                 elementInDOM.removeClass('ended').addClass('running');
                 // il body non viene parsato da jQuery
                 // quindi per selezionare l'intero contenuto
-                // è necessario eliminare il body dalla ricerca
+                // Ã¨ necessario eliminare il body dalla ricerca
                 // per es. se si deve cercare 'body > *'
-                // il selettore verrà convertito in '> *'
+                // il selettore verrÃ  convertito in '> *'
                 var selector = key.replace('body', '');
                 //rimuove eventulai meta tag rimasti
                 var elementInPage = page.find(selector).not('meta');
@@ -1366,7 +1367,7 @@ function countProperties(obj) {
 
                     return; //continua il ciclo 'each'
                 }
-                //l'aggiunta di un elemento è indipendente dal browser utilizzato
+                //l'aggiunta di un elemento Ã¨ indipendente dal browser utilizzato
                 var animationData;
                 if (value.type === 'add') {
                     utils.animation.common.add.call(self, value, elementInDOM, elementInPage, variables, key, target);
@@ -1380,9 +1381,9 @@ function countProperties(obj) {
                             animator.transition.call(self, value, elementInDOM, elementInPage, variables, key, target);
                             break;
                         case 'crossFade':
-                            //l'opzione crossFade necessita della proprietà opacity
+                            //l'opzione crossFade necessita della proprietÃ  opacity
                             //per la customizzazione del delay e della durata
-                            //l'effetto sarà sempre quello di far sparire
+                            //l'effetto sarÃ  sempre quello di far sparire
                             //completamente l'elemento per poi sostituirlo nel DOM
                             animator.crossFade.call(self, value, elementInDOM, elementInPage, variables, key, target);
                             break;
@@ -1507,7 +1508,7 @@ function countProperties(obj) {
             //1) puntano ad una nuova finestra
             //2) hanno href = #
             //3) link ad email (mailto)
-            //in più, tramite l'opzione 'exclude' si possono escludere uno o più elementi
+            //in piÃ¹, tramite l'opzione 'exclude' si possono escludere uno o piÃ¹ elementi
 
             var excludedElements = [];
             $(data.exclude).each(function () {
@@ -1532,7 +1533,6 @@ function countProperties(obj) {
 
             return this.each(function () {
                 var $this = $(this);
-                var data = $this.data();
                 //rimozione degli eventi
                 $(window).unbind('.AsyncNavigator');
                 //rimozione di tutti i dati associati al plug-in
