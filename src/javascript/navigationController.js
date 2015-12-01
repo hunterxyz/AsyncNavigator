@@ -57,6 +57,20 @@ function countProperties(obj) {
 
 }
 
+function isBrowser() {
+
+    var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+    var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+    var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+    // At least Safari 3+: "[object HTMLElementConstructor]"
+    var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+    var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
+
+    return {opera: isOpera, firefox: isFirefox, safari: isSafari, chrome: isChrome, ie: isIE};
+
+}
+
 (function ($) {
     //fallback per le versioni di jQuery < 1.8
     if (!$.isFunction($.parseHTML)) {
@@ -134,19 +148,18 @@ function countProperties(obj) {
             var prefix = '';
             var transitionHandler;
 
-            if ($.browser.mozilla) {
+            var browser = isBrowser();
+
+            if (browser.firefox) {
                 prefix = '-moz-';
                 transitionHandler = 'transitionend';
-            }
-            else if ($.browser.webkit) {
+            } else if (browser.safari || browser.chrome) {
                 prefix = '-webkit-';
                 transitionHandler = 'webkitTransitionEnd';
-            }
-            else if ($.browser.msie) {
+            } else if (browser.ie) {
                 prefix = '-ms-';
                 transitionHandler = 'MStransitionEnd';
-            }
-            else if ($.browser.opera) {
+            } else if (browser.opera) {
                 prefix = '-o-';
                 transitionHandler = 'otransitionend';
             }
@@ -216,33 +229,33 @@ function countProperties(obj) {
         paramsToArray: function (parameters) {
 
             var tmpParams;
-            with (parameters.variables) {
-                /*jshint ignore:start*/
-
-                tmpParams = eval(parameters.functionObj.params/*params*/);
-
-                $.each(tmpParams, function (i, item) {
-                    if (typeof item === 'object' && item !== null) {
-                        $.each(item, function (i2, item2) {
-                            if (typeof item2 === 'object') {
-                                tmpParams[i][i2] = item2;
-                            } else {
-                                try {
-                                    if (typeof eval(item2) === 'object') {
-                                        tmpParams[i][i2] = eval(item2);
-                                    } else {
-                                        tmpParams[i][i2] = item2;
-                                    }
-                                }
-                                catch (e) {
-                                    tmpParams[i][i2] = item2;
-                                }
-                            }
-                        });
-                    }
-                });
-                /*jshint ignore:end*/
-            }
+            //with (parameters.variables) {
+            //    /*jshint ignore:start*/
+            //
+            //    tmpParams = eval(parameters.functionObj.params/*params*/);
+            //
+            //    $.each(tmpParams, function (i, item) {
+            //        if (typeof item === 'object' && item !== null) {
+            //            $.each(item, function (i2, item2) {
+            //                if (typeof item2 === 'object') {
+            //                    tmpParams[i][i2] = item2;
+            //                } else {
+            //                    try {
+            //                        if (typeof eval(item2) === 'object') {
+            //                            tmpParams[i][i2] = eval(item2);
+            //                        } else {
+            //                            tmpParams[i][i2] = item2;
+            //                        }
+            //                    }
+            //                    catch (e) {
+            //                        tmpParams[i][i2] = item2;
+            //                    }
+            //                }
+            //            });
+            //        }
+            //    });
+            //    /*jshint ignore:end*/
+            //}
             return tmpParams;
 
         },
@@ -334,8 +347,7 @@ function countProperties(obj) {
             if (check.error) {
                 $.error('L\'animazione su ' + check.child + ' non può essere assegnata in quanto esiste già  un\'animazione assegnata al padre ' + check.parent);
                 return false;
-            }
-            else {
+            } else {
                 data.ajaxData = res;
                 delete res.actions;
                 delete res.page;
@@ -370,9 +382,13 @@ function countProperties(obj) {
             }
 
             $.ajax({
-                url: url,
+                url: url + '?' + new Date().getTime(),
                 type: 'get',
                 dataType: 'json',
+                headers: {
+                    'async-navigator': 'async-navigator',
+                    'Content-Type': 'application/json'
+                },
 
                 success: function (res) {
                     utils.managePage.call(self, res);
@@ -519,6 +535,7 @@ function countProperties(obj) {
                     utils.log.call(self, 'No images to preload, calling Callback');
                     callback.call(self);
                 }
+
             } else {
                 utils.log.call(self, 'Calling Callback... (No preload)');
                 callback.call(self);
@@ -526,6 +543,7 @@ function countProperties(obj) {
         },
 
         getCssProperties: function (properties) {
+
             var self = this;
             var data = self.data('AsyncNavigator');
             var totalDuration = 0;
@@ -533,13 +551,14 @@ function countProperties(obj) {
             var values = [];
 
             if (properties['in'] && properties['in'] !== 'fake') {
+
                 properties['in']['in'] = 'fake';
                 properties.out['in'] = 'fake';
                 var valuesIn = utils.getCssProperties.call(self, properties['in']);
                 var valuesOut = utils.getCssProperties.call(self, properties.out);
                 return {'in': valuesIn, 'out': valuesOut};
-            }
-            else if (!properties['in']) {
+
+            } else if (!properties['in']) {
                 properties['in'] = 'fake';
                 var tmp = utils.getCssProperties.call(self, properties);
                 return {'in': tmp, 'out': tmp};
@@ -596,7 +615,7 @@ function countProperties(obj) {
             var self = this;
             var data = self.data('AsyncNavigator');
 
-            if (!actions) {
+            if ($.isEmptyObject(actions)) {
                 actions = {};
                 actions[data.selector + ' > *'] = {
                     'type': 'crossFade',
@@ -1393,7 +1412,7 @@ function countProperties(obj) {
                     utils.animation.common.add.call(self, value, elementInDOM, incomingElement, variables, key, target);
                 } else {
 
-                    var animationHandler = $.browser.msie ? 'jquery' : 'css3';
+                    var animationHandler = isBrowser().ie ? 'jquery' : 'css3';
                     var animator = utils.animation[animationHandler];
 
                     switch (value.type) {
@@ -1513,7 +1532,7 @@ function countProperties(obj) {
             if (History) {
                 //bind per History
                 $(window).off('statechange.AsyncNavigator');
-                $(window).bind('statechange.AsyncNavigator', function () {
+                $(window).on('statechange.AsyncNavigator', function () {
 
                     var state = History.getState();
                     var toCall = state.data.realPage;
@@ -1552,7 +1571,7 @@ function countProperties(obj) {
             //3) link ad email (mailto)
             //in più, tramite l'opzione 'exclude' si possono escludere uno o più elementi
 
-            data.anchorsSet = this.findElementsToExclude(data);
+            data.anchorsSet = methods.findElementsToExclude(data);
 
             methods.bindAsyncNavigation.call(me);
 
