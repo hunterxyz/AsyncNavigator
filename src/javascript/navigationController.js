@@ -12,7 +12,7 @@
 var me;
 var loaded;
 
-function waitForelementInDOM(target, element) {
+function waitForElementInDOM(target, element) {
 
     while ($(target).find(element).length === 0) {
 
@@ -27,7 +27,7 @@ function appendAndWait(target, element) {
 
     $(target).append(element);
 
-    waitForelementInDOM(target, element);
+    waitForElementInDOM(target, element);
 
 }
 
@@ -35,7 +35,7 @@ function prependAndWait(target, element) {
 
     $(target).prepend(element);
 
-    waitForelementInDOM(target, element);
+    waitForElementInDOM(target, element);
 
 }
 
