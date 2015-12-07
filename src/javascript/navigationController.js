@@ -23,7 +23,7 @@ var handleChangeState = function () {
         //in caso di back alla prima pagina d'atterraggio
         toCall = state.hash.replace(/^\.\//, '');
     }
-    this.utils.callPage.call(this, toCall);
+    utils.callPage.call(this, toCall);
 
 };
 
@@ -321,7 +321,7 @@ var utils = {
                     left: 0,
                     'z-index': 2147483647,
                     cursor: 'wait'
-                });
+                }).addClass('overlay');
 
                 if (data.debug) {
                     data.overlay.css({
@@ -629,7 +629,7 @@ var utils = {
 
         var cssValue = values.join(',');
 
-        transitionValue[getBrowserPrefix + 'transition'] = cssValue;
+        transitionValue[getBrowserPrefix() + 'transition'] = cssValue;
         $.extend(transitionValue, tmpProperties);
 
         return {
@@ -1106,7 +1106,7 @@ var utils = {
 
                 var self = this;
                 var data = self.data('AsyncNavigator');
-                var transition = getBrowserPrefix + 'transition';
+                var transition = getBrowserPrefix() + 'transition';
                 var prop = utils.animation.common.transition.init.call(self, elementInDOM, incomingElement, value.params.cssProperties);
 
                 if (elementInDOM.length) {
@@ -1263,16 +1263,15 @@ var utils = {
             },
 
             crossFade: function (value, elementInDOM, incomingElement, variables, key, target) {
-                var self = this;
-                var data = self.data('AsyncNavigator');
 
+                var self = this;
                 var params = value.params.cssProperties.opacity;
                 //costruzione della transizione css3 da applicare all'elemento
                 var cssParam = 'opacity ' + params.duration + 'ms ' + params['timing-function'] + ' ' + params.delay + 'ms';
                 //salvataggio dati
                 elementInDOM.data('duration', params.duration);
                 incomingElement.data('duration', params.duration);
-                //bind di fine animazione
+
                 elementInDOM.on(transitionEnds, function (e) {
                     var handledElement = $(this);
                     //se viene notificata la fine dell'evento che dura più a lungo
@@ -1280,12 +1279,11 @@ var utils = {
                         //eliminazione dell'evento
                         handledElement.off(transitionEnds);
                         //esecuzione distruttore
-                        utils.execFunction.call(self,
-                            {
-                                scopeObj: handledElement,
-                                functionObj: value.params.destroyer,
-                                variables: variables
-                            });
+                        utils.execFunction.call(self, {
+                            scopeObj: handledElement,
+                            functionObj: value.params.destroyer,
+                            variables: variables
+                        });
                         var relatedElement = handledElement.data('relatedElement');
                         //rimozione dal DOM
                         handledElement.remove();
@@ -1327,7 +1325,7 @@ var utils = {
                             }
                         });
                         //impostazione parametri di animazione
-                        incomingElement.css(getBrowserPrefix + 'transition', cssParam);
+                        incomingElement.css(getBrowserPrefix() + 'transition', cssParam);
 
                         setTimeout(function () {
                             //esecuzione inizializzatore
@@ -1341,7 +1339,7 @@ var utils = {
                         }, 5);
                     }
                 }
-                elementInDOM.css(getBrowserPrefix + 'transition', cssParam);
+                elementInDOM.css(getBrowserPrefix() + 'transition', cssParam);
                 setTimeout(function () {
                     //delay di 5ms per far rendere conto al browser che la proprietà  à¨ cambiata
                     elementInDOM.css('opacity', 0);
