@@ -580,16 +580,18 @@ var utils = {
         var maxDuration = 0;
         var tmpProperties = {};
 
-        $.each(properties, function (i, val) {
-            if (i === 'transform' || i === 'transform-origin') {
-                i = data.prefix + i;
+        $.each(properties, function (cssProperty, val) {
+
+            if (cssProperty === 'transform' || cssProperty === 'transform-origin') {
+                cssProperty = data.prefix + cssProperty;
             }
 
-            //tmpString = property duration(ms) timing-function delay(ms)
-            var tmpString = i;
-            tmpString += ' ' + (val.duration || 0) + 'ms';
-            tmpString += ' ' + (val['timing-function'] || 'ease');
-            tmpString += ' ' + (val.delay || 0) + 'ms';
+            var transition = [
+                cssProperty,
+                (val.duration || 0) + 'ms',
+                (val['timing-function'] || 'ease'),
+                (val.delay || 0) + 'ms'
+            ].join(' ');
 
             var delay = parseInt(val.delay, 10);
             var duration = parseInt(val.duration, 10);
@@ -597,13 +599,14 @@ var utils = {
 
             if (tmpDuration > totalDuration) {
                 totalDuration = tmpDuration;
-                maxDurationProperty = i;
+                maxDurationProperty = cssProperty;
                 maxDuration = val.duration;
             }
 
-            values.push(tmpString);
+            values.push(transition);
 
-            tmpProperties[i] = val.value;
+            tmpProperties[cssProperty] = val.value;
+
         });
 
         var cssValue = values.join(',');
