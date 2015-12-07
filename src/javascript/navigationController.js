@@ -117,6 +117,24 @@ function getDefaultTransition(data) {
 
 }
 
+function getBrowserPrefix() {
+
+    var prefix = '';
+    var browser = isBrowser();
+
+    if (browser.firefox) {
+        prefix = '-moz-';
+    } else if (browser.safari || browser.chrome) {
+        prefix = '-webkit-';
+    } else if (browser.ie) {
+        prefix = '-ms-';
+    } else if (browser.opera) {
+        prefix = '-o-';
+    }
+
+    return prefix;
+
+}
 var utils = {
 
     log: function (text) {
@@ -583,7 +601,7 @@ var utils = {
         $.each(properties, function (cssProperty, val) {
 
             if (cssProperty === 'transform' || cssProperty === 'transform-origin') {
-                cssProperty = data.prefix + cssProperty;
+                cssProperty = getBrowserPrefix() + cssProperty;
             }
 
             var transition = [
@@ -611,7 +629,7 @@ var utils = {
 
         var cssValue = values.join(',');
 
-        transitionValue[data.prefix + 'transition'] = cssValue;
+        transitionValue[getBrowserPrefix + 'transition'] = cssValue;
         $.extend(transitionValue, tmpProperties);
 
         return {
@@ -1088,7 +1106,7 @@ var utils = {
 
                 var self = this;
                 var data = self.data('AsyncNavigator');
-                var transition = data.prefix + 'transition';
+                var transition = getBrowserPrefix + 'transition';
                 var prop = utils.animation.common.transition.init.call(self, elementInDOM, incomingElement, value.params.cssProperties);
 
                 if (elementInDOM.length) {
@@ -1309,7 +1327,7 @@ var utils = {
                             }
                         });
                         //impostazione parametri di animazione
-                        incomingElement.css(data.prefix + 'transition', cssParam);
+                        incomingElement.css(getBrowserPrefix + 'transition', cssParam);
 
                         setTimeout(function () {
                             //esecuzione inizializzatore
@@ -1323,7 +1341,7 @@ var utils = {
                         }, 5);
                     }
                 }
-                elementInDOM.css(data.prefix + 'transition', cssParam);
+                elementInDOM.css(getBrowserPrefix + 'transition', cssParam);
                 setTimeout(function () {
                     //delay di 5ms per far rendere conto al browser che la proprietà  à¨ cambiata
                     elementInDOM.css('opacity', 0);
