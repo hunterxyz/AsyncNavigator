@@ -10,22 +10,38 @@
  * preload: content preload, default true
  */
 
-var loaded;
+function isBrowser() {
 
-var transitionEnds = 'webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd';
+    var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+    var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+    var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+    // At least Safari 3+: "[object HTMLElementConstructor]"
+    var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+    var isIE = /*@cc_on!@*/!!document.documentMode; // At least IE6
 
-var handleChangeState = function () {
+    return {opera: isOpera, firefox: isFirefox, safari: isSafari, chrome: isChrome, ie: isIE};
 
-    var state = History.getState();
-    var toCall = state.data.realPage;
+}
 
-    if (!toCall) {
-        //in caso di back alla prima pagina d'atterraggio
-        toCall = state.hash.replace(/^\.\//, '');
+function getBrowserPrefix() {
+
+    var prefix = '';
+    var browser = isBrowser();
+
+    if (browser.firefox) {
+        prefix = '-moz-';
+    } else if (browser.safari || browser.chrome) {
+        prefix = '-webkit-';
+    } else if (browser.ie) {
+        prefix = '-ms-';
+    } else if (browser.opera) {
+        prefix = '-o-';
     }
-    utils.callPage.call(this, toCall);
 
-};
+    return prefix;
+
+}
 
 function waitForElementInDOM(target, element) {
 
@@ -72,43 +88,29 @@ function countProperties(obj) {
 
 }
 
-function isBrowser() {
-
-    var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
-    var isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
-    var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
-    // At least Safari 3+: "[object HTMLElementConstructor]"
-    var isChrome = !!window.chrome && !isOpera;              // Chrome 1+
-    var isIE = /*@cc_on!@*/false || !!document.documentMode; // At least IE6
-
-    return {opera: isOpera, firefox: isFirefox, safari: isSafari, chrome: isChrome, ie: isIE};
-
-}
-
 function getDefaultTransition(data) {
 
     var actions = {};
 
     actions[data.selector + ' > *'] = {
 
-        'type': 'crossFade',
+        'type':   'crossFade',
         'params': {
             'cssProperties': {
                 'opacity': {
-                    'duration': '600',
-                    'delay': '0',
+                    'duration':        '600',
+                    'delay':           '0',
                     'timing-function': 'ease'
                 }
             },
             'changeContent': true,
-            'initializer': {
+            'initializer':   {
                 'function': '',
-                'params': '[]'
+                'params':   '[]'
             },
-            'destroyer': {
+            'destroyer':     {
                 'function': '',
-                'params': '[]'
+                'params':   '[]'
             }
         }
     };
@@ -117,24 +119,10 @@ function getDefaultTransition(data) {
 
 }
 
-function getBrowserPrefix() {
+var loaded;
 
-    var prefix = '';
-    var browser = isBrowser();
+var transitionEnds = 'webkitTransitionEnd transitionend msTransitionEnd oTransitionEnd';
 
-    if (browser.firefox) {
-        prefix = '-moz-';
-    } else if (browser.safari || browser.chrome) {
-        prefix = '-webkit-';
-    } else if (browser.ie) {
-        prefix = '-ms-';
-    } else if (browser.opera) {
-        prefix = '-o-';
-    }
-
-    return prefix;
-
-}
 var utils = {
 
     log: function (text) {
@@ -191,8 +179,8 @@ var utils = {
         });
 
         return {
-            error: actionsError,
-            child: child,
+            error:  actionsError,
+            child:  child,
             parent: parent
         };
 
@@ -251,7 +239,7 @@ var utils = {
 
     },
 
-    paramsToArray: function (parameters) {
+    paramsToArray: function (/*parameters*/) {
 
         var tmpParams;
         //with (parameters.variables) {
@@ -305,7 +293,7 @@ var utils = {
 
             var savedStates = History.savedStates.length;
             var myHost = window.location.protocol + '//' + window.location.hostname;
-            //se l'host à¨ uguale dall'host da cui parte la chiamata
+            //se l'host è uguale dall'host da cui parte la chiamata
             var realPagePos = link.href.replace(myHost, '').indexOf('/');
             var realPage = link.href.substring(realPagePos + 1 + myHost.length);
 
@@ -314,19 +302,19 @@ var utils = {
             if (savedStates !== History.savedStates.length) {
                 utils.log.call(self, 'INIZIO TRANSIZIONI Plug-in Disattivato');
                 data.overlay = $('<div/>').css({
-                    width: '100%',
-                    height: '100%',
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
+                    width:     '100%',
+                    height:    '100%',
+                    position:  'fixed',
+                    top:       0,
+                    left:      0,
                     'z-index': 2147483647,
-                    cursor: 'wait'
+                    cursor:    'wait'
                 }).addClass('overlay');
 
                 if (data.debug) {
                     data.overlay.css({
                         'background-color': '#000',
-                        opacity: 0.03
+                        opacity:            0.03
                     });
                 }
                 if (data.enableOverlay) {
@@ -407,12 +395,12 @@ var utils = {
         }
 
         $.ajax({
-            url: url + '?' + new Date().getTime(),
-            type: 'get',
+            url:      url + '?' + new Date().getTime(),
+            type:     'get',
             dataType: 'json',
-            headers: {
+            headers:  {
                 'async-navigator': 'async-navigator',
-                'Content-Type': 'application/json'
+                'Content-Type':    'application/json'
             },
 
             success: function (res) {
@@ -463,7 +451,7 @@ var utils = {
          data.endedActions++;
          if (data.actionsNumber === data.endedActions) {
          utils.log.call(self, '-------------------------------------------------------------FINE TRANSIZIONI ' + data.endedActions + '/' + data.actionsNumber + ' Plug-in Riattivato');
-         //re-inizializzazione su tutti gli elementi a cui à¨ stato applicato il plugin
+         //re-inizializzazione su tutti gli elementi a cui è stato applicato il plugin
          data.endedActions = 0;
          $('body a').off('click.AsyncNavigator');
 
@@ -511,7 +499,7 @@ var utils = {
 
         var self = this;
         var toPreload = $('<img/>');
-
+        //TODO generalize it
         toPreload.load(function () {
 
             loaded++;
@@ -572,7 +560,7 @@ var utils = {
     getCssProperties: function (properties) {
 
         var self = this;
-        var data = self.data('AsyncNavigator');
+        //var data = self.data('AsyncNavigator');
         var totalDuration = 0;
         var transitionValue = {};
         var values = [];
@@ -633,11 +621,11 @@ var utils = {
         $.extend(transitionValue, tmpProperties);
 
         return {
-            durationValues: {
+            durationValues:  {
                 property: maxDurationProperty,
                 duration: maxDuration
             },
-            cssValue: cssValue,
+            cssValue:        cssValue,
             transitionValue: transitionValue
         };
     },
@@ -690,9 +678,9 @@ var utils = {
                 if (elementInDOM.length) {
                     //distruttore
                     utils.execFunction.call(self, {
-                        scopeObj: elementInDOM,
+                        scopeObj:    elementInDOM,
                         functionObj: value.params.destroyer,
-                        variables: variables
+                        variables:   variables
                     });
                     //rimozione dal DOM
                     elementInDOM.remove();
@@ -705,9 +693,9 @@ var utils = {
                     //inizializzatore
                     utils.execFunction.call(self,
                         {
-                            scopeObj: appended,
+                            scopeObj:    appended,
                             functionObj: value.params.initializer,
-                            variables: variables
+                            variables:   variables
                         });
                     //chiamata di fine animazione
                     utils.transitionEnded.call(self, 'ADDED: ' + key);
@@ -755,10 +743,10 @@ var utils = {
                             reset = {'top': 0};
                             action = 'before';
                             contentCss = {
-                                'top': -elementInDOMHeight,
-                                'left': 0,
+                                'top':    -elementInDOMHeight,
+                                'left':   0,
                                 'height': elementInDOMHeight * 2,
-                                'width': elementInDOMWidth
+                                'width':  elementInDOMWidth
                             };
                             break;
                         case 'bottom':	//append
@@ -766,9 +754,9 @@ var utils = {
                             action = 'after';
                             contentCss = {
                                 'bottom': 0,
-                                'left': 0,
+                                'left':   0,
                                 'height': elementInDOMHeight * 2,
-                                'width': elementInDOMWidth
+                                'width':  elementInDOMWidth
                             };
                             break;
                         case 'right':	//append
@@ -777,9 +765,9 @@ var utils = {
                             reset = {'right': elementInDOMWidth};
                             action = 'after';
                             contentCss = {
-                                'top': 0,
-                                'right': 0,
-                                'width': elementInDOMWidth * 2,
+                                'top':    0,
+                                'right':  0,
+                                'width':  elementInDOMWidth * 2,
                                 'height': elementInDOMHeight
                             };
                             break;
@@ -789,9 +777,9 @@ var utils = {
                             reset = {'left': 0};
                             action = 'before';
                             contentCss = {
-                                'top': 0,
-                                'left': -elementInDOMWidth,
-                                'width': elementInDOMWidth * 2,
+                                'top':    0,
+                                'left':   -elementInDOMWidth,
+                                'width':  elementInDOMWidth * 2,
                                 'height': elementInDOMHeight
                             };
                             break;
@@ -801,8 +789,8 @@ var utils = {
 
                     var wrapperCss = {
                         'overflow': 'hidden',
-                        'width': elementInDOMWidth,
-                        'height': elementInDOMHeight
+                        'width':    elementInDOMWidth,
+                        'height':   elementInDOMHeight
                     };
 
                     content.css(transitionValue);
@@ -813,14 +801,14 @@ var utils = {
                     elementInDOM[action](incomingElement);
 
                     utils.execFunction.call(self, {
-                        scopeObj: incomingElement,
+                        scopeObj:    incomingElement,
                         functionObj: value.params.initializer,
-                        variables: variables
+                        variables:   variables
                     });
 
                     return {
                         content: elementInDOM.parent(),
-                        reset: reset
+                        reset:   reset
                     };
                 },
 
@@ -829,9 +817,9 @@ var utils = {
                     var self = this;
                     //esecuzione distruttore
                     utils.execFunction.call(self, {
-                        scopeObj: handledElement.data('elementInDOM'),
+                        scopeObj:    handledElement.data('elementInDOM'),
                         functionObj: value.params.destroyer,
-                        variables: variables
+                        variables:   variables
                     });
 
                     //rimozione dal DOM
@@ -842,8 +830,8 @@ var utils = {
                     incomingElement.unwrap();
                     incomingElement.unwrap();
                     incomingElement.css({
-                        width: '',
-                        height: '',
+                        width:   '',
+                        height:  '',
                         'float': ''
                     });
                     utils.log.call(self, 'FINE ANIMAZIONE D\' USCITA(SLIDE) ' + key);
@@ -870,9 +858,9 @@ var utils = {
                     incomingElement.data('duration', prop['in'].durationValues.duration);
 
                     return {
-                        cssValue: prop['in'].cssValue,
-                        cssValueOut: prop.out.cssValue,
-                        transitionValue: prop['in'].transitionValue,
+                        cssValue:           prop['in'].cssValue,
+                        cssValueOut:        prop.out.cssValue,
+                        transitionValue:    prop['in'].transitionValue,
                         transitionValueOut: prop.out.transitionValue
                     };
                 },
@@ -884,7 +872,7 @@ var utils = {
 
             crossFade: {
 
-                init: function () {
+                init:    function () {
                 },
                 destroy: function () {
                 }
@@ -967,9 +955,9 @@ var utils = {
 
                                     handledElement.replaceWith(relatedElement.css(cssValues.out));
                                     utils.execFunction.call(self, {
-                                        scopeObj: relatedElement,
+                                        scopeObj:    relatedElement,
                                         functionObj: value.params.initializer,
-                                        variables: variables
+                                        variables:   variables
                                     });
                                 }
 
@@ -984,9 +972,9 @@ var utils = {
                             } else {
 
                                 utils.execFunction.call(self, {
-                                    scopeObj: handledElement,
+                                    scopeObj:    handledElement,
                                     functionObj: value.params.destroyer,
-                                    variables: variables
+                                    variables:   variables
                                 });
                                 handledElement.remove();
                                 utils.elementReady.call(self, key);
@@ -1010,9 +998,9 @@ var utils = {
 
                         //initialization
                         utils.execFunction.call(self, {
-                            scopeObj: incomingElement,
+                            scopeObj:    incomingElement,
                             functionObj: value.params.initializer,
-                            variables: variables
+                            variables:   variables
                         });
 
                         incomingElement.animate(endPositions, duration['in'], function () {
@@ -1036,9 +1024,9 @@ var utils = {
                         var relatedElement = handledElement.data('relatedElement');
                         utils.execFunction.call(self,
                             {
-                                scopeObj: handledElement,
+                                scopeObj:    handledElement,
                                 functionObj: value.params.destroyer,
-                                variables: variables
+                                variables:   variables
                             });
                         handledElement.remove();
 
@@ -1055,9 +1043,9 @@ var utils = {
                         prependAndWait(elementInDOM.parent(), incomingElement);
 
                         utils.execFunction.call(self, {
-                            scopeObj: incomingElement,
+                            scopeObj:    incomingElement,
                             functionObj: value.params.initializer,
-                            variables: variables
+                            variables:   variables
                         });
 
                         utils.log.call(self, 'FINE ANIMAZIONE D\' ENTRATA' + key);
@@ -1074,9 +1062,9 @@ var utils = {
                         prependAndWait(target, incomingElement.css('opacity', 0.01));
 
                         utils.execFunction.call(self, {
-                            scopeObj: incomingElement,
+                            scopeObj:    incomingElement,
                             functionObj: value.params.initializer,
-                            variables: variables
+                            variables:   variables
                         });
 
                         incomingElement.animate({'opacity': 1}, duration, function () {
@@ -1105,7 +1093,7 @@ var utils = {
             transition: function (value, elementInDOM, incomingElement, variables, key, target) {
 
                 var self = this;
-                var data = self.data('AsyncNavigator');
+                //var data = self.data('AsyncNavigator');
                 var transition = getBrowserPrefix() + 'transition';
                 var prop = utils.animation.common.transition.init.call(self, elementInDOM, incomingElement, value.params.cssProperties);
 
@@ -1124,9 +1112,9 @@ var utils = {
                                 if (relatedElement.length) {
                                     //esecuzione del distruttore
                                     utils.execFunction.call(self, {
-                                        scopeObj: handledElement,
+                                        scopeObj:    handledElement,
                                         functionObj: value.params.destroyer,
-                                        variables: variables
+                                        variables:   variables
                                     });
 
                                     // entra incomingElement
@@ -1139,9 +1127,9 @@ var utils = {
 
                                     //inizializzatore
                                     utils.execFunction.call(self, {
-                                        scopeObj: relatedElement,
+                                        scopeObj:    relatedElement,
                                         functionObj: value.params.initializer,
-                                        variables: variables
+                                        variables:   variables
                                     });
 
                                     /*********************************************/
@@ -1169,9 +1157,9 @@ var utils = {
                                 } else {
 
                                     utils.execFunction.call(self, {
-                                        scopeObj: handledElement,
+                                        scopeObj:    handledElement,
                                         functionObj: value.params.destroyer,
-                                        variables: variables
+                                        variables:   variables
                                     });
                                     handledElement.remove();
                                     //utils.elementReady.call(self,key)
@@ -1179,7 +1167,7 @@ var utils = {
                                     //chiamata di fine animazione
                                     utils.elementReady.call(self, key);
                                     utils.transitionEnded.call(self, key);
-                                    //non serve perchà© l'elemento à¨ stato rimosso dal DOM
+                                    //non serve perchà© l'elemento è stato rimosso dal DOM
                                     //utils.setEndClass.call(handledElement);
                                 }
 
@@ -1187,9 +1175,9 @@ var utils = {
                                 //inizializzatore
                                 //utils.elementReady.call(self,key)
                                 utils.execFunction.call(self, {
-                                    scopeObj: elementInDOM,
+                                    scopeObj:    elementInDOM,
                                     functionObj: value.params.initializer,
-                                    variables: variables
+                                    variables:   variables
                                 });
                                 /*********************************************/
                                 //handling dell'evento d'entrata?
@@ -1235,9 +1223,9 @@ var utils = {
                         $(target).append(incomingElement);
                         //utils.elementReady.call(self,key);
                         utils.execFunction.call(self, {
-                            scopeObj: incomingElement,
+                            scopeObj:    incomingElement,
                             functionObj: value.params.initializer,
-                            variables: variables
+                            variables:   variables
                         });
 
                         incomingElement.on(transitionEnds, function (e) {
@@ -1280,9 +1268,9 @@ var utils = {
                         handledElement.off(transitionEnds);
                         //esecuzione distruttore
                         utils.execFunction.call(self, {
-                            scopeObj: handledElement,
+                            scopeObj:    handledElement,
                             functionObj: value.params.destroyer,
-                            variables: variables
+                            variables:   variables
                         });
                         var relatedElement = handledElement.data('relatedElement');
                         //rimozione dal DOM
@@ -1306,9 +1294,9 @@ var utils = {
                     if (elementInDOM.length) {
                         //esecuzione inizializzatore
                         utils.execFunction.call(self, {
-                            scopeObj: incomingElement,
+                            scopeObj:    incomingElement,
                             functionObj: value.params.initializer,
-                            variables: variables
+                            variables:   variables
                         });
                     } else {
                         incomingElement.on(transitionEnds, function (e) {
@@ -1330,18 +1318,18 @@ var utils = {
                         setTimeout(function () {
                             //esecuzione inizializzatore
                             utils.execFunction.call(self, {
-                                scopeObj: incomingElement,
+                                scopeObj:    incomingElement,
                                 functionObj: value.params.initializer,
-                                variables: variables
+                                variables:   variables
                             });
-                            //delay di 5ms per far rendere conto al browser che la proprietà  à¨ cambiata
+                            //delay di 5ms per far rendere conto al browser che la proprietà  è cambiata
                             incomingElement.css('opacity', 1);
                         }, 5);
                     }
                 }
                 elementInDOM.css(getBrowserPrefix() + 'transition', cssParam);
                 setTimeout(function () {
-                    //delay di 5ms per far rendere conto al browser che la proprietà  à¨ cambiata
+                    //delay di 5ms per far rendere conto al browser che la proprietà  è cambiata
                     elementInDOM.css('opacity', 0);
                 }, 5);
             },
@@ -1390,7 +1378,7 @@ var utils = {
             elementInDOM.removeClass('ended').addClass('running');
             // il body non viene parsato da jQuery
             // quindi per selezionare l'intero contenuto
-            // à¨ necessario eliminare il body dalla ricerca
+            // è necessario eliminare il body dalla ricerca
             // per es. se si deve cercare 'body > *'
             // il selettore verrà  convertito in '> *'
             var selector = key.replace('body', '');
@@ -1411,7 +1399,7 @@ var utils = {
 
                 return; //continua il ciclo 'each'
             }
-            //l'aggiunta di un elemento à¨ indipendente dal browser utilizzato
+            //l'aggiunta di un elemento è indipendente dal browser utilizzato
             var animationData;
             if (value.type === 'add') {
                 utils.animation.common.add.call(self, value, elementInDOM, incomingElement, variables, key, target);
@@ -1443,6 +1431,19 @@ var utils = {
             }
         });
     }
+
+};
+
+var handleChangeState = function () {
+
+    var state = History.getState();
+    var toCall = state.data.realPage;
+
+    if (!toCall) {
+        //in caso di back alla prima pagina d'atterraggio
+        toCall = state.hash.replace(/^\.\//, '');
+    }
+    utils.callPage.call(this, toCall);
 
 };
 
@@ -1545,9 +1546,7 @@ var initHistory = function () {
 
             });
 
-            var anchorsSet = this.find('a').not(excludedElements).not('[target=_blank]').not('[href^=#]').not('[href^=mailto]');
-
-            return anchorsSet;
+            return this.find('a').not(excludedElements).not('[target=_blank]').not('[href^=#]').not('[href^=mailto]');
 
         },
 
@@ -1557,11 +1556,11 @@ var initHistory = function () {
 
             var data = this.data('AsyncNavigator');
             var defaults = {
-                'exclude': '',
-                'debug': false,
-                'preload': true,
+                'exclude':       '',
+                'debug':         false,
+                'preload':       true,
                 'enableOverlay': true,
-                'loader': $()
+                'loader':        $()
             };
 
             var settings = $.extend(defaults, options);
